@@ -1,0 +1,1 @@
+final num list = reverse(take num(reverse list))

@@ -1,0 +1,1 @@
+somaImpares list = sum [x | x <- list,  x `mod` 2 == 1]

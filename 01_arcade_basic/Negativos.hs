@@ -1,0 +1,1 @@
+neglist list = length [x | x <- list, x < 0]
