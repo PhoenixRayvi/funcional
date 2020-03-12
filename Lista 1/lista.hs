@@ -40,10 +40,12 @@ calda list = tail list    --13. Mostra todos os elementos da lista com exceção
 corpo list = init list    --14. Mostra todos os elementos da lista com exceção do ultimo
 
 unique [] = []    --15. Remove as repetiçõs da lista
-unique (e:list) = 
+unique (e:list) =
   if not (null list)
     then e : unique (filter (/= e) list)
     else [e]
+
+menores num list = [x | x <- list, y <- take num (qsort list), x == y]    --16. 3 menores elementos na ordem que aparecem 
 
 --17. Lista [1, −1, 2, −2, 3, −3, · · · , num, −num]--
 alter' num =
@@ -62,7 +64,7 @@ divide' list num =
     then []
     else head list : divide' (tail list) (num - 1)
 
-divide list num = [divide' list num, drop num list]
+divide list num = (divide' list num, drop num list)
 --19. Pega os n primeiros elementos e transforma em tupla
 
 intercal list1 list2 =                --20. Elementos de duas listas intercalados
@@ -76,6 +78,8 @@ intercal list1 list2 =                --20. Elementos de duas listas intercalado
 
 uniao list1 list2 = unique (list1 ++ list2)     --21. União de duas listas sem repetição
 
+intersec list1 list2 = [x | x <- list1, y <- list2, x == y]   --22. Lista das chaves que list1 e list2 possuem em comum
+
 sequencia num1 num2 = [num2..(num2 + num1 - 1)]   --23. Sequencia de n numeros(num1) começando em num 2
 
 inserir num list =    --24. Insere número no local correto de uma lista ordenada
@@ -83,14 +87,28 @@ inserir num list =    --24. Insere número no local correto de uma lista ordenad
     then num : list
     else head list : inserir num (tail list)
 
+isSorted list = list == qsort(list)   --25. Diz se a lista é ordenada
+
+qsort [] = []   --26. Quicksort
+qsort list = qsort (filter (< head list) list) ++ filter (== head list) list ++ qsort (filter (> head list) list)
+
 --27. Rotaciona o n números do começo para o final
 rotEsq' num text =
   if num == 0
     then []
     else head text : rotEsq' (num - 1) (tail text)
 
-rotEsq num text = drop num text ++ rotEsq' num text
+rotEsq num text = drop (num `mod` (length text)) text ++ rotEsq' (num `mod` (length text)) text
 --27. Rotaciona o n números do começo para o final
+
+--28. Rotaciona o n números do começo para o final
+rotDir' num text =
+  if num == 0
+    then []
+    else last text : rotDir' (num - 1) (init text)
+
+rotDir num text = reverse(rotDir' (num `mod` (length text)) text) ++ take (length text - num `mod` (length text)) text 
+--28. Rotaciona o n números do começo para o final
 
 upper [] = []       --29. Deixa o texto em caixa alta
 upper text =
@@ -100,7 +118,22 @@ upper text =
       then head text : upper (tail text)
       else []
 
-selec text list =     --31. Mosta os elemento de uma string por indice com base no elemento da lista
+--30. A primeira letra de cada palavra em maiusculo
+lowercase [] = []
+lowercase text = 
+  if head text >= 'A' && head text <= 'Z'
+    then toEnum (fromEnum (head text) + 32) : lowercase (tail text)
+    else head text : lowercase (tail text)
+uppercase text = 
+  if head text >= 'a' && head text <= 'z'
+    then toEnum (fromEnum (head text) - 32) : lowercase (tail text)
+    else head text : lowercase (tail text)
+titulo' [] = []
+titulo' list = uppercase (head [x | x <- words list]) : titulo' (unwords (tail [x | x <- words list]))
+titulo list = unwords (titulo' list)
+--30. A primeira letra de cada palavra em maiusculo
+
+selec text list =     --31. Mostra os elemento de uma string por indice com base no elemento da lista
   if null list
     then []
     else text !! head list : selec text (tail list)
@@ -114,9 +147,50 @@ sdig num =        --34. Soma os dígitos de um número
     then 0
     else num `mod` 10 + sdig (num `div` 10)
 
---menores num list =
---  if num == 0
---    then []
---    else if length(filter (\x -> x < head list) list) == 0
---      then filter (\x -> x < head list) list : menores (num - 1) (filter (\x -> x < (head list)) list)
---      else head list : menores (num - 1) (filter (\x -> x < (head list)) list)
+--36. Contar a quantidade de elementos em sequencia e guardar em sublistas individuais a quantidade de vezes que aparece e o valor
+compac' list = 
+  if length list == 1
+    then [head list]
+    else if head list == list !! 1
+      then head list : compac' (tail list)
+      else if head list /= list !! 1
+        then [head list]
+        else []
+
+compac [] = []
+compac list = 
+  if length (compac' list) == 1
+    then [head list] : compac (drop (length (compac' list)) list)
+    else if length (compac' list) > 1
+      then [length (compac' list), head list] : compac (drop (length (compac' list)) list)
+      else []
+--36. Contar a quantidade de elementos em sequencia e guardar em sublistas individuais a quantidade de vezes que aparece e o valor
+
+
+splitints list = (filter odd list, filter even list)    --37. Lista com impares e pares da lista
+
+perfeito num = length [x | x <- [1..num], x * x == num] == 1    --38. Retorna True se o número for um quadrado perfeito e False caso contrario
+
+--39. Converte o numero num para base b
+base' num b =
+  if(num == 0)
+    then []
+    else [[x] | x <- ['0'..'9']++['A'..'Z']] !! (num `mod` b) ++ base' (num `div` b) b
+
+base num b = reverse (base' num b)
+--39. Converte o numero num para base b
+
+partes' [] = [[]]    --40. Subconjuntos de um conjunto
+partes' list = map (head list:) (partes' (tail list)) ++ partes' (tail list)
+partes list = unique(partes' list)
+
+ 
+{- bubblesort' [] = []
+bubblesort' list = 
+  if head list > list !! 1
+    then case list of
+      x:y:xs -> y:x:xs
+  else bubblesort'(tail list)
+
+bubblesort [] = []
+bubblesort list =  -}
