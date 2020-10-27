@@ -183,16 +183,3 @@ base num b = reverse (base' num b)
 partes' [] = [[]]    --40. Subconjuntos de um conjunto
 partes' list = map (head list:) (partes' (tail list)) ++ partes' (tail list)
 partes list = unique(partes' list)
-
- 
-{- bubblesort' [] = []
-bubblesort' list = 
-  if head list > list !! 1 && length list > 2
-    then case list of
-      x:y:xs -> y:x:bubblesort' (tail list)
-  else if length list <= 2
-    then case list of
-      x:y:xs -> y:x:xs
-    else bubblesort'(tail list)
-bubblesort [] = []
-bubblesort list =  -}

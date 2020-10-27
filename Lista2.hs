@@ -9,6 +9,18 @@ delete' num list =
         then tail list
         else head list : delete' num (tail list)
 
+swap list i1 i2 = 
+    if i1 < i2
+        then take i1 list ++ list !! i2 : take (i2 - 1) (drop (i1 + 1) list) ++ list !! i1 : drop (i2 + 1) list
+        else swap list i2 i1
+
+buscaBin' i [] num = -1
+buscaBin' i list num
+    | num == head list = i
+    | otherwise = buscaBin' (i + 1) (tail list) num
+buscaBin list num = buscaBin' 0 list num
+
+{-
 listPrimes [] = []
 listPrimes list = 
     if length [head list | x <- [2..100], head list `mod` x == 0] == 1
@@ -21,9 +33,8 @@ biggerNum list =
         then biggerNum (head list : drop 2 list)
         else biggerNum (tail list)
 
-swap list i1 i2 = 
-    if i1 < i2
-        then take i1 list ++ list !! i2 : take (i2 - 1) (drop (i1 + 1) list) ++ list !! i1 : drop (i2 + 1) list
-        else swap list i2 i1
 --nextPerm list = 
 --swap list num1 num2 = take num1 list ++ list !! num2 : drop (num1 + 1) list
+-}
+
+--allPerms list = [[x, y, z] | x <- list, y <- tail list, z <- drop 2 list]
