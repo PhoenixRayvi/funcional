@@ -187,10 +187,12 @@ partes list = unique(partes' list)
  
 {- bubblesort' [] = []
 bubblesort' list = 
-  if head list > list !! 1
+  if head list > list !! 1 && length list > 2
+    then case list of
+      x:y:xs -> y:x:bubblesort' (tail list)
+  else if length list <= 2
     then case list of
       x:y:xs -> y:x:xs
-  else bubblesort'(tail list)
-
+    else bubblesort'(tail list)
 bubblesort [] = []
 bubblesort list =  -}
