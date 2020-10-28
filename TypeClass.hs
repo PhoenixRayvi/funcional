@@ -1,3 +1,22 @@
+import Numeric(showFFloat)
+
+--Q1 - Complex
+data Complex = Complex { real :: Float
+                        ,img :: Float
+                        }
+
+instance Show Complex where
+    show (Complex x y)= showFFloat (Just 3) x "" ++ " + " ++ showFFloat (Just 3) y "i"
+
+instance Num Complex where
+    (+) (Complex a b) (Complex c d) = Complex (a + c) (b + d)
+    (-) (Complex a b) (Complex c d) = Complex (a - c) (b - d)
+    (*) (Complex a b) (Complex c d) = (Complex ((a*c)-(b*d)) ((a*d)+(b*c)))
+    negate (Complex a b) = Complex (-a) (-b)
+    abs (Complex a b) = (Complex (sqrt (a^2 + b^2)) 0)
+    signum (Complex a b) = (Complex (sqrt a - signum a) (sqrt b - signum b))
+    fromInteger n   = Complex (fromIntegral n::Float) 0
+
 --Q2 - Date
 data Mes = Janeiro 
             | Fevereiro 
@@ -32,7 +51,7 @@ instance Ord Date where
 
 
 --Q5
-
+{-
 data Pessoa = Pessoa { nome :: String
             , idade :: Int
             , salario :: Float 
@@ -45,3 +64,4 @@ instance Show Pessoa where
 
 sortListPessoa :: [Pessoa] -> Criterio -> [Pessoa]
 sortListPessoa list ByNome = filter (< ((head list).idade)) list
+-}

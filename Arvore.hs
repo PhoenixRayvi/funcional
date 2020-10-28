@@ -1,6 +1,7 @@
 data Arv a = Vazia | No a ( Arv a ) ( Arv a ) deriving (Eq , Show)
 data MultiSet a = MultiSet [(a,Int)] deriving (Show)
 
+
 insertArvore num Vazia = No num Vazia Vazia
 insertArvore num (No x esq dir)
     | num <= x = No x (insertArvore num esq) dir
